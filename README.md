@@ -13,9 +13,9 @@ First ensure you have docker installed, can use [this](https://docs.docker.com/e
 
 Once the docker engine is running, run the following from the command line:
 
-1. docker build --tag '<image_name>' .
+1. `docker build --tag '<image_name>' .`
 
-2. docker run --name '<container_name>' --detach -p 5432:5432 '<image_name>'
+2. `docker run --name '<container_name>' --detach -p 5432:5432 '<image_name>'`
 
 If you are on Mac or something with Docker Desktop make sure the application is running before doing this. You may also need to run the image from the application for it to work.
 
