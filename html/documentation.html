@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Where are my Packets Going?</title>
+    <link rel="stylesheet" href="../css/index.css"> 
+
+</head>
+<body>
+    <!-- Nav Bar -->
+    <nav>
+        <ul>
+            <li>
+                <p><a href="../index.html">Home</a></p>
+            </li>
+            <li>
+                <p><a href="../html/about.html">About</a></p>
+            </li>
+            <li>
+                <p><a href="../html/documentation.html">Documentation</a></p>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Documentation Content -->
+    <div class="container">
+        <h1>Documentation</h1>
+
+        <p>Code available to be looked through or cloned <a>here</a>.</p>
+        
+        <h2>General Info</h2>
+        <p>
+            PcapTracker is a full stack application made using Python's <a href="https://scapy.net/" target="_blank" rel="nohup">Scapy library</a> to help analyze user pcaps.
+            Our Python scripts filter through user pcaps to gather packet tracking information, like where and when
+            are packets being sent to or received from. We then visualize these finding on the front end using interactive
+            graphs and maps.
+        </p>
+
+        <br/>
+
+        <h2>Technical details</h2>
+
+        <p>
+            As mentioned before, this is a full stack project. The front end is built using standard HTML, CSS, and JavaScript
+            and we use an Apache web server to host it. The front end also makes use of the d3 library to different graphs based on
+            information gathered from the inputted PCAP. These graphs can be scrolled through and interacted with by hovering over
+            data points for more information.
+        </p>
+
+        <p>
+            The backend for this application was done using Python. This is where we actually analyze the PCAPs sent to us by users
+            with help from the Scapy library. This library essentially just made it easier to read through the PCAPs packet by packet,
+            actually filtering through the packets for interesting information was done through custom functions. We are able to generate 
+            an interactive world map showing where IPs are being sent to by using the <a href="https://dev.maxmind.com/geoip/" target="_blank" rel="nohup">geoIP2 Api by MaxMind</a> 
+            through a Python wrapper on this collected information.
+        </p>
+
+        <p>
+            To actually call our Python scripts to generate this information we are running a Flask server at the endpoint /analyze.
+            This Flask server is further loadbalanced with <a href="https://gunicorn.org/" target="_blank" rel="nohup">GUnicorn</a> as
+            Flask is not to be used directly in a production enviorenment. GUnicorn solves the problem of Flask not 
+            inherintly compatible with multithreading, meaning that GUnicorn is what allows two people couldn't simulataneously use our application.
+        </p>
+
+        <h2>Data Flow Diagram</h2>
+        <img src="../images/Data_Diagram.webp" alt="Data Flow Diagram" width="90%" height="100%">
+</body>
+</html>

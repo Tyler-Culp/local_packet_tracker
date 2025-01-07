@@ -1,0 +1,350 @@
+nav {
+    background-color: #4CAF50; 
+    border-radius: 0.5rem; 
+    padding: 0.5rem 1rem; 
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+    margin-bottom: 2rem; 
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around; 
+    align-items: center; /* Center items vertically */
+    padding: 0; 
+    margin: 0; 
+}
+
+nav ul li {
+    padding: 0.5rem 1rem; /* Increased padding for a larger clickable area */
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    transition: color 0.3s, background-color 0.3s, transform 0.2s; /* Added transitions for hover effects */
+    border-radius: 0.25rem; 
+    padding: 0.5rem 0.75rem; 
+}
+
+nav ul li a:hover {
+    color: #4CAF50; 
+    background-color: #fff; 
+    transform: scale(1.05); 
+    box-shadow: 0 0 0.3125rem rgba(0, 0, 0, 0.1); 
+}
+
+/* Styles for the container holding the header and paragraph */
+.container {
+    background-color: #ffffff; 
+    border-radius: 0.625rem; 
+    padding: 2rem; 
+    max-width: 80%; /* Limit the width for better readability */
+    margin: 2rem auto; /* Center the container and add top/bottom margin */
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1); 
+    text-align: center;
+    border: 0.0625rem solid #ddd; 
+}
+
+.container h1 {
+    color: #333; 
+    margin-bottom: 1rem; 
+    font-weight: bold; 
+}
+
+.container p {
+    font-size: 1.125rem; /* Slightly larger font size for better readability */
+    color: #666; 
+    line-height: 1.8;
+    margin-bottom: 0; 
+    text-align: left;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 1rem;
+    color: #333;
+    background-color: #f4f4f4;
+    line-height: 1.6;
+}
+
+/* Form styles */
+form {
+    margin: 2rem auto 0;
+    width: 60%; 
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 0.5rem; /* Adjusted to match the theme */
+    box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="file"] {
+    width: 95%; 
+    padding: 0.625rem; 
+    margin-bottom: 1rem;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.25rem; 
+}
+
+form input[type="submit"] {
+    background-color: #4CAF50; /* Adjusted to match the theme */
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem; /* Increased padding for larger button */
+    border-radius: 0.5rem; /* Rounded corners for modern look */
+    cursor: pointer;
+    font-size: 1.1rem; /* Slightly larger font for better readability */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transitions for hover */
+}
+
+form input[type="submit"]:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+    transform: scale(1.05); /* Slight scaling effect on hover */
+}
+
+/* Style for the container holding the images */
+.images {
+    display: flex;          /* Use Flexbox for layout */
+    justify-content: center; /* Distribute space evenly between items */
+    gap: 1rem;              /* Optional: adds space between images */
+    padding: 1rem;          /* Optional: adds space around the container */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+/* Style for each image */
+.images img {
+    width: 30%;              /* Each image takes up about 30% of the container width */
+    height: auto;           /* Maintain aspect ratio */
+    object-fit: cover;      /* Ensure the image covers the area without distortion */
+    border-radius: 0.5rem;    /* Optional: adds rounded corners to the images */
+}
+
+/* Container for images */
+.imageContainer {
+    background-color: #333;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    border-radius: 0.5rem;
+}
+
+/* Style for each image */
+.imageContainer img {
+    max-width: 100%; 
+    max-height: 40rem;
+    margin: 1rem;
+    border-radius: 0.5rem; /* Rounded corners */
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+    object-fit: contain; /* Preserve aspect ratio */
+    padding: 0.5rem;
+    background-color: rgb(131, 198, 165);
+}
+
+.mapContainer iframe {
+    display: block;
+    margin: auto;
+    width: 80%; 
+    height: 35rem; 
+    border: black 2px;
+    padding: 1rem;
+    background-color: black;
+}
+
+/* Dialog styling */
+dialog {
+    width: 20rem;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    background-color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#errorDialog {
+    text-align: left;
+}
+  
+  /* Spinner styling */
+.spinner {
+    border: 0.4rem solid #f3f3f3; /* Light grey */
+    border-top: 0.4rem solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    animation: spin 1s linear infinite;
+    margin: 1rem auto;
+}
+  
+  /* Spinner animation */
+@keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+}
+
+/* Makes the background darger once the dialog comes up */
+body.dialog-open {
+    background-color: rgba(0, 0, 0, 0.5);
+}  
+
+/* Might as well make it look better for mobile, thanks GPT. */
+@media (max-width: 768px) { /* 768px / 16px = 48rem */
+    nav ul {
+        flex-direction: column; /* Stack navigation items vertically on small screens */
+    }
+
+    nav ul li {
+        padding: 0.5rem 0; /* Adjust padding for stacked items */
+        text-align: center; /* Center-align text for mobile view */
+    }
+
+    .container {
+        padding: 1.5rem; /* Reduce padding on smaller screens */
+        max-width: 90%; /* Adjust width to be more flexible on mobile */
+    }
+
+    form {
+        width: 90%; /* Make form width responsive */
+    }
+
+    .images {
+        flex-direction: column; /* Stack images vertically on mobile */
+        align-items: center; /* Center align images */
+    }
+
+    .imageContainer {
+        grid-template-columns: 1fr; /* Single column layout for images on mobile */
+    }
+    .carousel {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .carousel-arrow {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+
+    .chartContainer {
+        width: 100%;  /* Full width on smaller screens */
+    }
+
+}
+
+
+
+
+
+.chartContainer {
+    position: relative; /* Ensure arrows can be positioned absolutely inside this container */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #2a2a2a; /* Dark background */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 200, 0.75); /* Neon glow effect */
+    margin-top: 2rem;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%; /* Vertically center the arrows */
+    transform: translateY(-50%); /* Adjust for perfect centering */
+    background: transparent;
+    border: none;
+    font-size: 2rem; /* Make sure the arrows are large enough */
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 10; /* Ensure the arrows are on top of the graph */
+}
+
+.carousel-arrow:hover {
+    color: #00ffc8; /* Neon color on hover */
+}
+
+.left-arrow {
+    left: 10px; /* Position the left arrow inside the container */
+}
+
+.right-arrow {
+    right: 10px; /* Position the right arrow inside the container */
+}
+
+
+
+
+.chartContainer svg {
+    max-width: 100%;  /* Ensure the SVG scales down if needed */
+    height: auto;
+}
+
+
+.graphContainer {
+    margin-bottom: 50px; /* Provide space between each chart */
+    padding: 10px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+}
+
+.graphContainer .tooltip {
+    position: absolute;
+    padding: 8px;
+    font-size: 13px;
+    font-family: 'Orbitron', sans-serif;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+}
+
+
+.carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.carousel-arrow {
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0 1rem;
+}
+
+.carousel-arrow:hover {
+    color: #00ffc8;  /* Neon color on hover */
+}
+
+.left-arrow {
+    position: absolute;
+    left: 0;
+}
+
+.right-arrow {
+    position: absolute;
+    right: 0;
+}

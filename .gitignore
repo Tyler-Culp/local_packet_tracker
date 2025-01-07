@@ -1,0 +1,9 @@
+.DS_Store
+*/.DS_Store
+lib
+lib64
+share
+venv
+bin
+pyvenv*
+analyzeAPI/flaskServer/__pycache__/*

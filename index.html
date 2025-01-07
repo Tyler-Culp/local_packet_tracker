@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset="UTF-8"> 
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="js/index.js"></script>
+        <meta name="description" content="PCAP tracking web application">    
+        <meta name="keywords" content="PCAP, PCAPs, packets, network, tracking">
+        <title>Where are my Packets Going?</title>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li>
+                    <p><a href="./index.html">Home</a></p>
+                </li>
+                <li>
+                    <p><a href="../html/about.html">About</a></p>
+                </li>
+                <li>
+                    <p><a href="html/documentation.html">Documentation</a></p>
+                </li>
+            </ul>
+        </nav>
+        <div class="container">
+            <h1>Where are my Packets Going?</h1>
+            <p>
+                HTTP Packets come and go, but to where? Upload a PCAP file and specify what IP address you are interested
+                in and we will generate graphs showing, what times your device was sending packets, who they were sending them to,
+                and what parts of the world the traffic was going to!
+            </p>
+            <form action="" method="post" onsubmit="formSubmitHandler(event)">
+                <label for="ip">IP or MAC Address of Interest:</label>
+                <input type="text" id="ip" name="ip"><br><br>
+                <label for="pcapFile">PCAP File to Analyze:</label>
+                <input 
+                    type="file" 
+                    id="pcapFile" 
+                    name="pcapFile" 
+                    accept=".pcap, .pcapng"
+                    required>
+                <br><br>
+                <input id="formSubmitButton" type="submit" value="Analyze">
+            </form>
+            <dialog id="loadingDialog">
+                <div class="spinner"></div>
+                <p>Processing your request, this could take up to 1 minute.</p>
+            </dialog>   
+            
+            <dialog id="errorDialog">
+                <p id="errorP"></p>
+                <br>
+                <button style="float: right" onclick="document.getElementById('errorDialog').close()">Close</button>
+            </dialog>
+        </div>
+
+        <div class="mapContainer"> </div>
+        <br>
+        <div class="imageContainer"> </div>
+    
+        <div class="chartContainer">
+            <button class="carousel-arrow left-arrow">&#9664;</button> <!-- Left Arrow -->
+            <div id="graphArea"></div> <!-- Graph display area -->
+            <button class="carousel-arrow right-arrow">&#9654;</button> <!-- Right Arrow -->
+        </div>
+    </body>
+</html>
