@@ -1,12 +1,13 @@
-// Define the async form submit handler
-// Ensure global variables for managing graphs are initialized
+// These two global variables are for the arrows and switching between the graphs
 let currentGraphIndex = 0;
 let validGraphs = [];
 
-// Attach navigation event listeners once, outside the form submission logic
+// These are the event listeners for the clicking of the left and right arrow to switch graphs
 document.addEventListener("DOMContentLoaded", () => {
+
+    // When left arrow is clicked
     document.querySelector('.left-arrow').addEventListener('click', () => {
-        console.log('Left arrow clicked'); // Add a debug statement to see if the event fires
+        console.log('Left arrow clicked');
         if (validGraphs.length > 0) {
             currentGraphIndex = (currentGraphIndex - 1 + validGraphs.length) % validGraphs.length;
             d3.select("#graphArea").selectAll("*").remove(); // Clear previous graph
@@ -14,8 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // When right arrow is clicked
     document.querySelector('.right-arrow').addEventListener('click', () => {
-        console.log('Right arrow clicked'); // Add a debug statement to see if the event fires
+        console.log('Right arrow clicked');
         if (validGraphs.length > 0) {
             currentGraphIndex = (currentGraphIndex + 1) % validGraphs.length;
             d3.select("#graphArea").selectAll("*").remove(); // Clear previous graph
@@ -26,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Async function for handling form submission
 async function formSubmitHandler(event) {
-    //Is used to stop the default behavior of an event, in this case, stopping the form from being submitted in the traditional way (which would refresh the page). It allows you to handle form submissions asynchronously and dynamically, without causing a page reload.
+
+    // Need to do this preventDefault to stop page from refreshing when form is submitted. 
     event.preventDefault(); 
 
     const ip = document.getElementById("ip").value;
@@ -40,7 +43,7 @@ async function formSubmitHandler(event) {
     document.querySelector(".imageContainer").innerHTML = "";// Clear previous image
     document.querySelector(".mapContainer").innerHTML = ""; // Clear previous map
 
-    // File validation logic
+    // Validation to make sure its only .pcap and .pcapng files
     const fileInput = document.getElementById("pcapFile");
     const allowedExtensions = /\.(pcap|pcapng)$/i;
     if (!file || !allowedExtensions.exec(file.name)) {
@@ -64,6 +67,7 @@ async function formSubmitHandler(event) {
 
             console.log(`data from backend = ${JSON.stringify(data)}`);
 
+            // If theres an error, just show an error
             if (data.error) {
                 dialog.close();
                 errorDialog.showModal();
@@ -71,7 +75,7 @@ async function formSubmitHandler(event) {
             }
 
             else {
-                // Display the map
+                // Display the geoip2 map
                 if (data.map) {
                     displayMap(data.map);
                 }
@@ -81,7 +85,7 @@ async function formSubmitHandler(event) {
 
                 // Initially display the first graph if graphs are available
                 if (validGraphs.length > 0) {
-                    currentGraphIndex = 0;  // Reset the graph index
+                    currentGraphIndex = 0; 
                     displaySleekGraph(validGraphs[currentGraphIndex]);
                 }
             }
@@ -97,7 +101,7 @@ async function formSubmitHandler(event) {
     submitButton.disabled = false; // Enable submit button
 }
 
-
+// Send the file to the backend to process and create the map and graphs
 async function sendFileToBackend(formData) {
     try {
         const res = await fetch("http://localhost:5432", { // Change url as needed depending on open port of flask app
@@ -112,6 +116,7 @@ async function sendFileToBackend(formData) {
     }
 }
 
+// Display the geoip2 map
 function displayMap(mapBase64) {
     const mapContainer = document.querySelector(".mapContainer");
     const caption = document.createElement("h3");
@@ -124,7 +129,9 @@ function displayMap(mapBase64) {
     mapContainer.appendChild(mapElement);
 }
 
+// This massive function is to make those really nice graphs.
 function displaySleekGraph(images) {
+
 // Getting the chartcontainer ready
 // -----------------------------------------------------------------------------------------
     console.log('Rendering graph for valid data:', images);
@@ -145,7 +152,7 @@ function displaySleekGraph(images) {
     const height = 400;
     const margin = { top: 70, right: 70, bottom: 125, left: 100 };
 
-    // This block of code creates an empty SVG element inside the chartContainer, sets its size (width and height), and gives it a dark background color. The SVG will act as the canvas where your data visualization (e.g., graph, chart) will be rendered.
+    // This block of code creates an empty SVG element inside the chartContainer, sets its size (width and height), and gives it a dark background color. The SVG will act as the canvas where the graph is rendered.
     const svgContainer = chartContainer.append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -160,7 +167,7 @@ function displaySleekGraph(images) {
 // BACKGROUND PARTICLE STUFF
 // -----------------------------------------------------------------------------------------
     
-    // Add ambient particles (decorative) to the SVG for visual effect
+    // Add ambient particles
     const numParticles = 50; // Number of ambient particles
     const particles = svgContainer.append("g")
         .attr("class", "particles"); // Group for the particles
@@ -169,7 +176,7 @@ function displaySleekGraph(images) {
     const particleData = d3.range(numParticles).map(() => ({
         x: Math.random() * width, // Random x-position
         y: Math.random() * height, // Random y-position
-        r: Math.random() * 2 + 1, // Random radius between 1 and 3
+        r: Math.random() * 2 + 1, // Random size
         dx: (Math.random() - 0.5) * 0.5, // Random horizontal movement speed
         dy: (Math.random() - 0.5) * 0.5  // Random vertical movement speed
     }));
@@ -181,8 +188,8 @@ function displaySleekGraph(images) {
         .attr("cx", d => d.x) // Set x-position
         .attr("cy", d => d.y) // Set y-position
         .attr("r", d => d.r) // Set radius
-        .attr("fill", "#ffffff") // Set color (white)
-        .attr("opacity", 0.1); // Set opacity to make them faint
+        .attr("fill", "#ffffff") // Set color
+        .attr("opacity", 0.1); // Set opacity 
 
     // Function to animate the particles by updating their positions
     function animateParticles() {
@@ -220,31 +227,33 @@ function displaySleekGraph(images) {
     // Check if the x-axis data is numeric
     const xIsNumeric = images.xAxis.every(d => !isNaN(d));
 
-    // Define the x-scale and the x-axis based on whether the data is numeric or categorical
     let xScale, xAxisGenerator;
+    // If X is numerical
     if (xIsNumeric) {
         xScale = d3.scaleLinear()
             .domain([d3.min(images.xAxis, d => +d), d3.max(images.xAxis, d => +d)]) // Numeric range for x-axis
             .range([0, width - margin.left - margin.right]);
         xAxisGenerator = d3.axisBottom(xScale)
-            .ticks(10) // Set number of ticks on the x-axis
+            .ticks(10) // Number of ticks on the x-axis
             .tickSize(- (height - margin.top - margin.bottom)) // Extend tick lines across the graph
             .tickPadding(10); // Space between tick labels and the axis line
+
+    // If X is categorical
     } else {
         xScale = d3.scalePoint() // Point scale for categorical data
             .domain(images.xAxis)
             .range([0, width - margin.left - margin.right])
             .padding(0.5);
         xAxisGenerator = d3.axisBottom(xScale)
-            .tickSize(- (height - margin.top - margin.bottom))
-            .tickPadding(10);
+            .tickSize(- (height - margin.top - margin.bottom)) // Extend tick lines across the graph
+            .tickPadding(10); // Space between tick labels and the axis line
     }
 
     // Check if the y-axis data is numeric
     const yIsNumeric = images.yAxis.every(d => !isNaN(d));
-
-    // Define the y-scale and the y-axis based on whether the data is numeric or categorical
     let yScale, yAxisGenerator;
+
+    // If Y is numerical
     if (yIsNumeric) {
         yScale = d3.scaleLinear()
             .domain([0, d3.max(images.yAxis, d => +d)]) // Numeric range for y-axis
@@ -253,25 +262,27 @@ function displaySleekGraph(images) {
         yAxisGenerator = d3.axisLeft(yScale)
             .ticks(10) // Set number of ticks on the y-axis
             .tickSize(- (width - margin.left - margin.right))
-            .tickPadding(10);
+            .tickPadding(10); // Space between tick labels and the axis line
+
+    // If Y is categorical
     } else {
         yScale = d3.scalePoint() // Point scale for categorical data
             .domain(images.yAxis)
             .range([height - margin.top - margin.bottom, 0])
             .padding(0.5);
         yAxisGenerator = d3.axisLeft(yScale)
-            .tickPadding(10);
+            .tickPadding(10); // Space between tick labels and the axis line
     }
 
-    // Prepare the data for the graph (combine x and y data into objects)
+    // Prepare the data for the graph by combining x and y data into objects
     const data = images.xAxis.map((xValue, i) => ({
         x: xIsNumeric ? +xValue : xValue,
         y: yIsNumeric ? +images.yAxis[i] : images.yAxis[i]
     }));
 
-    // Create a color gradient if the graph type is line and both x and y data are numeric
+    // Create a color gradient if the graph type is line and both x and y data are numeric (NOT CURRENTLY BEING USED SINCE WE ARE DOING JUST SCATTER PLOTS)
     const gradientId = `gradient-${Math.random().toString(36).substr(2, 9)}`;
-    const color = images.color || "#00ffc8"; // Set default neon color
+    const color = images.color || "#00ffc8"; 
     if (images.type === 'line' && xIsNumeric && yIsNumeric) {
         const defs = svg.append("defs");
         const gradient = defs.append("linearGradient")
@@ -295,7 +306,7 @@ function displaySleekGraph(images) {
     // Draw the line or scatter plot based on the data type
     if (images.type === 'scatter' || images.type === 'line') {
 
-        // For line plots (with numeric x and y data)
+        // For line plots (with numeric x and y data) (NOT CURRENTLY BEING USED SINCE WE ARE DOING JUST SCATTER PLOTS)
         if (images.type === 'line' && xIsNumeric && yIsNumeric) {
             const line = d3.line()
                 .x(d => xScale(d.x)) // Map x-data to x-scale
@@ -343,7 +354,7 @@ function displaySleekGraph(images) {
         .call(xAxisGenerator)
         .attr("class", "x-axis");
 
-    // Rotate x-axis labels if x data is categorical (non-numeric)
+    // Rotate x-axis labels if x data is categorical to try to fit in the categories
     if (!xIsNumeric) {
         xAxis.selectAll("text")
             .attr("transform", "rotate(-45)") // Rotate the labels
@@ -363,48 +374,45 @@ function displaySleekGraph(images) {
     svg.selectAll('.x-axis line').style('stroke', '#444444'); // Grey gridlines for x-axis
     svg.selectAll('.y-axis line').style('stroke', '#444444'); // Grey gridlines for y-axis
 
-    // Add a label for the x-axis
+    // Add a label for the x-axis title
     svg.append("text")
         .attr("transform", `translate(${(width - margin.left - margin.right)/2},${height - margin.top - margin.bottom + 75})`)
         .style("text-anchor", "middle")
         .style("font-size", "14px")
-        .style("fill", "#ffffff") // White text
+        .style("fill", "#ffffff")
         .style("font-family", "'Orbitron', sans-serif")
         .text(images.xTitle || "X Axis"); // Use provided x-title or default "X Axis"
 
-    // Add a label for the y-axis
+    // Add a label for the y-axis title
     svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", -50) // Reasonable y-offset for rotated label
+        .attr("y", -50)
         .attr("x", - (height - margin.top - margin.bottom)/2)
         .attr("dy", "-1.5em")
         .style("text-anchor", "middle")
         .style("font-size", "14px")
-        .style("fill", "#ffffff") // White text
+        .style("fill", "#ffffff")
         .style("font-family", "'Orbitron', sans-serif")
         .text(images.yTitle || "Y Axis"); // Use provided y-title or default "Y Axis"
 
-    // Add a title to the chart
+    // Add a main title to the chart
     svg.append("text")
         .attr("x", (width - margin.left - margin.right)/2)
         .attr("y", -30)
         .style("text-anchor", "middle")
         .style("font-size", "20px")
         .style("font-weight", "bold")
-        .style("fill", "#ffffff") // White text
+        .style("fill", "#ffffff")
         .style("font-family", "'Orbitron', sans-serif")
         .text(images.title || "Chart Title"); // Use provided title or default "Chart Title"
 
-    // Add a glow filter definition (used for the neon/glow effect on lines and circles)
+    // Add a glow filter definition (for the neon/glow effect on lines and circles)
     const defs = svg.append("defs");
-
     const filter = defs.append("filter")
         .attr("id", "glow");
-
     filter.append("feGaussianBlur")
         .attr("stdDeviation", "3.5") // Blur effect
         .attr("result", "coloredBlur");
-
     const feMerge = filter.append("feMerge");
     feMerge.append("feMergeNode").attr("in", "coloredBlur");
     feMerge.append("feMergeNode").attr("in", "SourceGraphic"); // Combine the blur with the original graphics
@@ -415,18 +423,19 @@ function displaySleekGraph(images) {
 
 
 
-// TOOLTIP STUFF FROM HERE DOWN
+// TOOLTIP STUFF FROM HERE DOWN WHENEVER THE POINT IS HOVERED OVER
 // -----------------------------------------------------------------------------------------
 
+    // Creating tooltip and tooltip starts as hidden
     let tooltip = chartContainer.select(".tooltip");
     if (tooltip.empty()) {
         tooltip = chartContainer.append("div")
             .attr("class", "tooltip")
             .style("position", "absolute")
-            .style("opacity", 0); // Tooltip hidden
+            .style("opacity", 0); 
     }
 
-    // Hover Effects
+    // When hovering over a data point thi happens
     svg.selectAll(".data-point")
         .on("mouseover", function (event, d) {
             // Format X and Y values for the tooltip
@@ -447,24 +456,27 @@ function displaySleekGraph(images) {
             d3.select(this)
                 .transition()
                 .duration(200)
-                .attr("r", 9) // Increase radius on hover
-                .attr("fill", "#ff00d4"); // Change color on hover
+                .attr("r", 9) // Increase the hovered point on hover
+                .attr("fill", "#ff00d4"); // Change color of the hovered point on hover
         })
+
+        // Move the tooltip with the mouse cursor
         .on("mousemove", function(event) {
-            // Move the tooltip with the mouse cursor
             const [x, y] = d3.pointer(event, chartContainer.node());
             tooltip.style("left", `${x + 10}px`)
                    .style("top", `${y - 40}px`);
         })
+
+        // Hide the tooltip and reset the point to a regular non-hovered point
         .on("mouseout", function () {
-            // Hide the tooltip and reset the point style
             tooltip.style("opacity", 0);
             d3.select(this)
                 .transition()
                 .duration(200)
-                .attr("r", 6) // Reset radius
-                .attr("fill", color); // Reset color
+                .attr("r", 6)
+                .attr("fill", color);
         });
 
     // -----------------------------------------------------------------------------------------
 }
+// Massive display graphs function is done finally...
