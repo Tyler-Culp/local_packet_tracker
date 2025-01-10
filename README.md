@@ -9,7 +9,7 @@ Our project uses the MaxMind API to help with geolocation of the ip addresses. T
 ## Using Docker
 This is the simplest way to get up and running locally with our application. 
 
-# IMPORTANT: Ensure you have added your own license key and account ID in geolocation.py before following any of the next steps.  
+**IMPORTANT: Ensure you have added your own license key and account ID in geolocation.py before following any of the next steps.**
 
 First ensure you have docker installed, can use [this](https://docs.docker.com/engine/install/) link to find an installation for your machine.
 
