@@ -7,7 +7,9 @@ Our project uses the MaxMind API to help with geolocation of the ip addresses. T
 [Here is the documentation](https://dev.maxmind.com/geoip/geolocate-an-ip/web-services/) on the api we used. Edit the file in: `./analyzeAPI/flaskServer/geolocation.py` to use your own license key for the geolocation (there should be a link to create an account and get a free passkey in step 2).
 
 ## Using Docker
-This is the simplest way to get up and running locally with our application. Ensure you have added your own license key in geolocation.py first. 
+This is the simplest way to get up and running locally with our application. 
+
+# IMPORTANT: Ensure you have added your own license key and account ID in geolocation.py before following any of the next steps.  
 
 First ensure you have docker installed, can use [this](https://docs.docker.com/engine/install/) link to find an installation for your machine.
 
@@ -41,7 +43,7 @@ Note: May have to redo this occassionally, had issues when pulling new code from
 
 4. `python3 app.py`
 
-5. (Optional - if you are trying to use in production enviorenment) Run gunicorn as a daemon (running as daemon not necessary) with this command: `gunicorn --config gunicornConfig.py wsgi:app --daemon`
+5. (Optional - if you are trying to use in production environment) Run gunicorn as a daemon (running as daemon not necessary) with this command: `gunicorn --config gunicornConfig.py wsgi:app --daemon`
     * If you run as a daemon you must use `ps aux | grep gunicorn` to find the daemon pid and kill it manually, note that this is a linux command
 
 ## Gunicorn service file
