@@ -75,6 +75,10 @@ async function formSubmitHandler(event) {
                 if (data.map) {
                     displayMap(data.map);
                 }
+                else{
+                    errorDialog.showModal();
+                    errorP.innerHTML = "The map could not be displayed. Check your license key and account ID in the geolocation.py file.";
+                }
 
                 // Store all the valid graphs
                 validGraphs = data.graphObjects || [];
