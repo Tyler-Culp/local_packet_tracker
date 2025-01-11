@@ -7,6 +7,7 @@ from analyzeIPs import getPcapData
 from validator import isValidIPAddr, isValidMacAddr, normalizeMacAddr, macAddrToIPAddr
 from createGraph import GraphBuilder, makeGraphObject
 from geolocation import sentIpLocations, generateMap 
+import geoip2.webservice
 
 app = Flask(__name__)
 CORS(app)
