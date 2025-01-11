@@ -83,8 +83,14 @@ def analyze_pcap():
     # Analyze the PCAP file
     pcapData = getPcapData(pcap, ip, 443)  # Example with HTTPS port
 
-    geographicMaps = generateMap(sentIpLocations(pcapData))
-    encodedGeographicMaps = base64.b64encode(geographicMaps.getvalue()).decode('utf-8')
+    encodedGeographicMaps = None
+    try:
+        geographicMaps = generateMap(sentIpLocations(pcapData))
+        encodedGeographicMaps = base64.b64encode(geographicMaps.getvalue()).decode('utf-8')
+    except geoip2.errors.AuthenticationError:
+        print("Authentication for the geoip2 service has failed. Please check your account ID and license key.")
+    except Exception as e:
+        print(f"Unexpected error during GeoIP client connection: {e}")
 
     # Below code was used to create matplotlib graphs, became unnecessary when we switched to generating graphs with D3
     # Left this as a template in case people who are better with matplotlib than us do want to use it
