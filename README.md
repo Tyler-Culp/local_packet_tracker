@@ -8,6 +8,9 @@ On that note we have limited the number of IPs that are geolocated in your pcap 
 
 Other things to note is that the RipeAtlas api seems to take a bit longer than MaxMind. Using a MAC address instead of an IP address will also cause the scripts to take a bit more time as we must first translate that MAC address into its corresponding IP in the given PCAP first.
 
+[RipeAtlas Documentation](https://ipmap.ripe.net/)
+[RipeAtlas Locate API Documentation](https://ipmap.ripe.net/docs/02.api-reference/#locate)
+
 ## MaxMind api
 Our project uses the MaxMind API to help with geolocation of the ip addresses. This API requires a free account with MaxMind to use (you need a license key and account ID to use it)
 
