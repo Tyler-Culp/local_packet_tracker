@@ -4,7 +4,7 @@ FROM python:3.10
 WORKDIR /usr/local/app
 
 # Copy the necessary files and directories into the container
-COPY analyzeAPI/flaskServer/ /usr/local/app
+COPY analyzeAPI/ /usr/local/app
 
 # Upgrade pip and install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
