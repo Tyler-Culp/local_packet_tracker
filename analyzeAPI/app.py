@@ -6,7 +6,7 @@ import magic
 from analyzeIPs import getPcapData
 from validator import isValidIPAddr, isValidMacAddr, normalizeMacAddr, macAddrToIPAddr
 from createGraph import GraphBuilder, makeGraphObject
-from geolocation import sentIpLocations, generateMap 
+from geolocation import getSentIpLocations, generateMap 
 import geoip2.webservice
 
 app = Flask(__name__)
@@ -87,7 +87,7 @@ def analyze_pcap():
     encodedGeographicMaps = None
     mapError = None
     try:
-        geographicMaps = generateMap(sentIpLocations(pcapData))
+        geographicMaps = generateMap(getSentIpLocations(pcapData))
         encodedGeographicMaps = base64.b64encode(geographicMaps.getvalue()).decode('utf-8')
     except geoip2.errors.AuthenticationError:
         print("Authentication for the geoip2 service has failed. Please check your account ID and license key.")
