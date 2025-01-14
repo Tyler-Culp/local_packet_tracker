@@ -5,6 +5,8 @@ import folium
 import io
 import requests
 
+MAX_NUMBER_OF_API_REQUESTS = 20
+
 # MaxMind documentation for api key
 # https://dev.maxmind.com/geoip/geolocate-an-ip/web-services/
 
@@ -65,7 +67,7 @@ def getSentIpLocations(map_data, api):
     for ip in map_data["sentIP"]:
         # Only geolocate the first 20 ips before breaking to not get API throttled
         # Get 1000 requests a day so this lets you run program 50 times at minimum
-        if len(seen_ips) > 20: break 
+        if len(seen_ips) > MAX_NUMBER_OF_API_REQUESTS: break 
         seen_ips.add(ip)
         location = None
         if api == "MaxMind":
