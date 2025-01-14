@@ -43,3 +43,14 @@ def macAddrToIPAddr(pcap: sc.PacketList, macAddr: str) -> str:
                 return packet[sc.IP].dst
 
     return None 
+
+def validate_mime_type(file):
+    mime = magic.Magic(mime = True)
+    mime_type = mime.from_buffer(file.stream.read(1024)) # Read first 1024 Bytes
+    file.stream.seek(0)
+    return mime_type in ['application/vnd.tcpdump.pcap', 'application/octet-stream']
+
+def validate_magic_number(file):
+    magic_number = file.read(4)
+    file.seek(0)
+    return magic_number in [b'\xa1\xb2\xc3\xd4', b'\x0a\x0d\x0d\x0a']

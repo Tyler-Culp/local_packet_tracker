@@ -4,7 +4,7 @@ import base64
 import scapy.all as sc
 import magic
 from analyzeIPs import getPcapData
-from validator import isValidIPAddr, isValidMacAddr, normalizeMacAddr, macAddrToIPAddr
+from validator import isValidIPAddr, isValidMacAddr, normalizeMacAddr, macAddrToIPAddr, validate_magic_number, validate_mime_type
 from createGraph import GraphBuilder, makeGraphObject
 from geolocation import getSentIpLocations, generateMap 
 import geoip2.webservice
@@ -24,18 +24,6 @@ def createErrorResponse(errorMsg: str):
     response.headers.add("Access-Control-Allow-Headers", "Content-Type")
 
     return response
-
-def validate_mime_type(file):
-    mime = magic.Magic(mime = True)
-    mime_type = mime.from_buffer(file.stream.read(1024)) # Read first 1024 Bytes
-    file.stream.seek(0)
-    return mime_type in ['application/vnd.tcpdump.pcap', 'application/octet-stream']
-
-def validate_magic_number(file):
-    magic_number = file.read(4)
-    file.seek(0)
-    return magic_number in [b'\xa1\xb2\xc3\xd4', b'\x0a\x0d\x0d\x0a']
-
 
 @app.route("/", methods=["OPTIONS"])
 def options():
