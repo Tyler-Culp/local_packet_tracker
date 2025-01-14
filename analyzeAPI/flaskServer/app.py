@@ -85,13 +85,16 @@ def analyze_pcap():
     pcapData = getPcapData(pcap, ip, 443)  # Example with HTTPS port
 
     encodedGeographicMaps = None
+    mapError = None
     try:
         geographicMaps = generateMap(sentIpLocations(pcapData))
         encodedGeographicMaps = base64.b64encode(geographicMaps.getvalue()).decode('utf-8')
     except geoip2.errors.AuthenticationError:
         print("Authentication for the geoip2 service has failed. Please check your account ID and license key.")
+        mapError = "Authentication for the geoip2 service has failed. Please check your account ID and license key."
     except Exception as e:
         print(f"Unexpected error during GeoIP client connection: {e}")
+        mapError = f"Unexpected error during GeoIP client connection: {e}"
 
     # Below code was used to create matplotlib graphs, became unnecessary when we switched to generating graphs with D3
     # Left this as a template in case people who are better with matplotlib than us do want to use it
@@ -102,14 +105,6 @@ def analyze_pcap():
     #     print("\nThis is the key " + key)
     #     if key == "sentTime":
     #         img = GraphBuilder(data=pcapData[key]).withTitle("Sent Packet Times").withXTitle("Time").withYTitle("Number of Packets").build()
-    #     elif key == "receivedTime":
-    #         img = GraphBuilder(data=pcapData[key]).withTitle("Received Packet Times").withXTitle("Time").withYTitle("Number of Packets").build()
-    #     elif key == "sentIP":
-    #         img = GraphBuilder(data=pcapData[key]).withTitle("IPs / Hostnames Traffic was Sent To").withXTitle("IPs / Hostnames").withYTitle("Number of Packets").build()
-    #     elif key == "receivedIP":
-    #         img = GraphBuilder(data=pcapData[key]).withTitle("IPs / Hostnames Traffic was Received From").withXTitle("IPs / Hostnames").withYTitle("Number of Packets").build()
-    #     elif key == "sentSize":
-    #         img = GraphBuilder(data=pcapData[key]).withTitle("Average Size in Bytes of Packets Sent Over Time").withXTitle("Time").withYTitle("Packet Sizes (bytes)").build()
 
     # Convert the image to a base64 string
     # img_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
@@ -132,10 +127,16 @@ def analyze_pcap():
             graphObjects.append(makeGraphObject(builder))
 
     # Create the response
-    response = jsonify({
-        "graphObjects": graphObjects,
-        "map": encodedGeographicMaps,
-    })
+    if mapError is None:
+        response = jsonify({
+            "graphObjects": graphObjects,
+            "map": encodedGeographicMaps,
+        })
+    else:
+        response = jsonify({
+            "graphObjects": graphObjects,
+            "mapError": mapError,
+        })
     
     # Set CORS headers
     response.headers.add("Access-Control-Allow-Origin", "*")

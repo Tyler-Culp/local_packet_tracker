@@ -40,8 +40,13 @@ def geolocate_ip(ip):
 
 def sentIpLocations(map_data):
     # Geolocate sent IPs
+    seen_ips = set()
     location_counts = {}
     for ip in map_data["sentIP"]:
+        # Only geolocate the first 20 ips before breaking to not get API throttled
+        # Get 1000 requests a day so this lets you run program 50 times at minimum
+        if len(seen_ips) > 20: break 
+        seen_ips.add(ip)
         location = geolocate_ip(ip)
         if location["latitude"] and location["longitude"]:
             loc_key = (location["latitude"], location["longitude"])
