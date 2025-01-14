@@ -50,7 +50,7 @@ def analyze_pcap():
     # Get IP and file from form data
     ip = request.form.get("ip")
     file = request.files.get("file")
-
+    
     if not file:
         errorResponse = createErrorResponse("No file received")
         return errorResponse, 410
@@ -87,14 +87,15 @@ def analyze_pcap():
     encodedGeographicMaps = None
     mapError = None
     try:
+        print("Trying to make map")
         geographicMaps = generateMap(getSentIpLocations(pcapData))
         encodedGeographicMaps = base64.b64encode(geographicMaps.getvalue()).decode('utf-8')
     except geoip2.errors.AuthenticationError:
         print("Authentication for the geoip2 service has failed. Please check your account ID and license key.")
-        mapError = "Authentication for the geoip2 service has failed. Please check your account ID and license key."
+        mapError = "Failed to generate map of sent traffic. Authentication for the geoip2 service has failed. Please check your account ID and license key."
     except Exception as e:
         print(f"Unexpected error during GeoIP client connection: {e}")
-        mapError = f"Unexpected error during GeoIP client connection: {e}"
+        mapError = f"Failed to generate map of sent traffic. Unexpected error during GeoIP client connection: {e}"
 
     # Below code was used to create matplotlib graphs, became unnecessary when we switched to generating graphs with D3
     # Left this as a template in case people who are better with matplotlib than us do want to use it

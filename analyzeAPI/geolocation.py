@@ -3,46 +3,44 @@ import socket
 import geoip2.webservice
 import folium
 import io
+import requests
 
 # MaxMind documentation for api key
 # https://dev.maxmind.com/geoip/geolocate-an-ip/web-services/
 
-license_key = '<Your_license_key>'
-account_id = 1234567
-client = geoip2.webservice.Client(account_id, license_key, host='geolite.info')
+MaxMind_license_key = '<Your_license_key>'
+MaxMind_account_id = 1234567
+MaxMind_client = geoip2.webservice.Client(MaxMind_account_id, MaxMind_license_key, host='geolite.info')
 
+# Does requests one by one but can be optimized to do them all at once
+# Ripe atlas documentation: https://ipmap.ripe.net/  https://ipmap.ripe.net/docs/02.api-reference/#locate 
 def geolocate_IP_RipeAtlas(ip):
+    print(f"ripe atlas ip {ip}")
     try:
-        # First check if the IP is a valid IPv4 or IPv6 address
-        ipaddress.ip_address(ip)
-        response = client.city(ip)
+        ip = socket.gethostbyname(ip)
+        print("Resolved IP")
+        res = requests.get(f"https://ipmap-api.ripe.net/v1/locate/{ip}")
+        print(f"response = {res}")
+        res = res.json()
+        print(f"json = {res}")
+        res = res.get("data")
+        print(f"data = {res}")
+        res = res.get(str(ip))
+        print(f"final result = {res}")
         return {
-            "city": response.city.name,
-            "country": response.country.name,
-            "latitude": response.location.latitude,
-            "longitude": response.location.longitude
-        }
-    except ValueError:
-        # If it's not a valid IP address, try to resolve it as a hostname
-        try:
-            resolved_ip = socket.gethostbyname(ip)
-            response = client.city(resolved_ip)
-            return {
-                "city": response.city.name,
-                "country": response.country.name,
-                "latitude": response.location.latitude,
-                "longitude": response.location.longitude
+                "city": res.get("cityName"),
+                "country": res.get("countryName"),
+                "latitude": res.get("latitude"),
+                "longitude": res.get("longitude")
             }
-        except (socket.gaierror, geoip2.errors.AddressNotFoundError):
-            return {"city": "Unknown", "country": "Unknown", "latitude": None, "longitude": None}
-    except geoip2.errors.AddressNotFoundError:
+    except:
         return {"city": "Unknown", "country": "Unknown", "latitude": None, "longitude": None}
 
 def geolocate_IP_MaxMind(ip):
         try:
             # First check if the IP is a valid IPv4 or IPv6 address
             ipaddress.ip_address(ip)
-            response = client.city(ip)
+            response = MaxMind_client.city(ip)
             return {
                 "city": response.city.name,
                 "country": response.country.name,
@@ -53,7 +51,7 @@ def geolocate_IP_MaxMind(ip):
             # If it's not a valid IP address, try to resolve it as a hostname
             try:
                 resolved_ip = socket.gethostbyname(ip)
-                response = client.city(resolved_ip)
+                response = MaxMind_client.city(resolved_ip)
                 return {
                     "city": response.city.name,
                     "country": response.country.name,
@@ -74,7 +72,7 @@ def getSentIpLocations(map_data):
         # Get 1000 requests a day so this lets you run program 50 times at minimum
         if len(seen_ips) > 20: break 
         seen_ips.add(ip)
-        location = geolocate_IP_MaxMind(ip)
+        location = geolocate_IP_RipeAtlas(ip)
         if location["latitude"] and location["longitude"]:
             loc_key = (location["latitude"], location["longitude"])
             if loc_key in location_counts:
