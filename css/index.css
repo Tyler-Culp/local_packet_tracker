@@ -95,6 +95,10 @@ form input[type="file"] {
     border-radius: 0.25rem; 
 }
 
+h3 {
+    text-align: center;
+}
+
 .radioButtonHolder > label {
     display: inline;
 }

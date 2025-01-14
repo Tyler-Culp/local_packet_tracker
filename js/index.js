@@ -6,7 +6,6 @@ let validGraphs = [];
 // Attach navigation event listeners once, outside the form submission logic
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('.left-arrow').addEventListener('click', () => {
-        console.log('Left arrow clicked'); // Add a debug statement to see if the event fires
         if (validGraphs.length > 0) {
             currentGraphIndex = (currentGraphIndex - 1 + validGraphs.length) % validGraphs.length;
             d3.select("#graphArea").selectAll("*").remove(); // Clear previous graph
@@ -15,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelector('.right-arrow').addEventListener('click', () => {
-        console.log('Right arrow clicked'); // Add a debug statement to see if the event fires
         if (validGraphs.length > 0) {
             currentGraphIndex = (currentGraphIndex + 1) % validGraphs.length;
             d3.select("#graphArea").selectAll("*").remove(); // Clear previous graph
@@ -39,6 +37,7 @@ async function formSubmitHandler(event) {
     const errorP = document.getElementById("errorP");
 
     // Clear previous content
+    document.querySelector("#graphArea").innerHTML = "";
     document.querySelector(".imageContainer").innerHTML = "";// Clear previous image
     document.querySelector(".mapContainer").innerHTML = ""; // Clear previous map
 
@@ -64,8 +63,6 @@ async function formSubmitHandler(event) {
         try {
             // Send form data to backend
             const data = await sendFileToBackend(formData);
-
-            console.log(`data from backend = ${JSON.stringify(data)}`);
 
             if (data.error) {
                 dialog.close();
@@ -122,7 +119,7 @@ async function sendFileToBackend(formData) {
 function displayMap(mapBase64) {
     const mapContainer = document.querySelector(".mapContainer");
     const caption = document.createElement("h3");
-    caption.text = "Locations of IPs that traffic was sent to"
+    caption.innerHTML = "Locations of IPs that traffic was sent to"
     const mapElement = document.createElement("iframe");
     mapElement.src = `data:text/html;base64,${mapBase64}`;
     mapElement.width = "100%";
@@ -134,7 +131,7 @@ function displayMap(mapBase64) {
 function displaySleekGraph(images) {
 // Getting the chartcontainer ready
 // -----------------------------------------------------------------------------------------
-    console.log('Rendering graph for valid data:', images);
+    // console.log('Rendering graph for valid data:', images);
 
     // Clear the previous graph, but keep the arrows intact
     d3.select("#graphArea").selectAll("*").remove();
