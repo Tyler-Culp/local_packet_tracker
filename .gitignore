@@ -6,5 +6,4 @@ share
 venv
 bin
 pyvenv*
-analyzeAPI/flaskServer/__pycache__/*
 __pycache__

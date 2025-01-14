@@ -31,6 +31,8 @@ async function formSubmitHandler(event) {
 
     const ip = document.getElementById("ip").value;
     const file = document.getElementById("pcapFile").files[0];
+    const api = document.querySelector('input[name="api"]:checked').value;
+
     const dialog = document.getElementById("loadingDialog");
     const submitButton = document.getElementById("formSubmitButton");
     const errorDialog = document.getElementById("errorDialog");
@@ -56,8 +58,9 @@ async function formSubmitHandler(event) {
     if (file) {
         const formData = new FormData();
         formData.append("ip", ip);
+        formData.append("api", api);
         formData.append("file", file);
-
+        console.log("formData = ", formData)
         try {
             // Send form data to backend
             const data = await sendFileToBackend(formData);

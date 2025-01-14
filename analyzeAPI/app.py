@@ -49,8 +49,12 @@ def options():
 def analyze_pcap():
     # Get IP and file from form data
     ip = request.form.get("ip")
+    api = request.form.get("api")
     file = request.files.get("file")
-    
+
+    print("ip = ", ip)
+    print("api = ", api)
+
     if not file:
         errorResponse = createErrorResponse("No file received")
         return errorResponse, 410
@@ -69,10 +73,7 @@ def analyze_pcap():
     except Exception as e:
         errorResponse = createErrorResponse("Error with pcap scripts")
         return errorResponse, 413
-    
-    print("ip = ", ip)
-    print("valid IP = ", isValidIPAddr(ip))
-    print("valid mac = ", isValidMacAddr(ip))
+
     if (not isValidIPAddr(ip)):
         if (not isValidMacAddr(ip)):
             errorResponse = createErrorResponse("invalid IP or MAC address given")
@@ -88,7 +89,7 @@ def analyze_pcap():
     mapError = None
     try:
         print("Trying to make map")
-        geographicMaps = generateMap(getSentIpLocations(pcapData))
+        geographicMaps = generateMap(getSentIpLocations(pcapData, api))
         encodedGeographicMaps = base64.b64encode(geographicMaps.getvalue()).decode('utf-8')
     except geoip2.errors.AuthenticationError:
         print("Authentication for the geoip2 service has failed. Please check your account ID and license key.")
@@ -114,15 +115,15 @@ def analyze_pcap():
     graphObjects = []
     for key in pcapData:
         if key == "sentTime":
-            builder = GraphBuilder(data=pcapData[key]).withTitle("Sent Packet Times").withXTitle("Time").withYTitle("Number of Packets")
+            builder = GraphBuilder(data=pcapData[key]).withTitle("Sent Packet Times").withXTitle("Relative Time (Seconds)").withYTitle("Number of Packets")
         elif key == "receivedTime":
-            builder = GraphBuilder(data=pcapData[key]).withTitle("Received Packet Times").withXTitle("Time").withYTitle("Number of Packets")
+            builder = GraphBuilder(data=pcapData[key]).withTitle("Received Packet Times").withXTitle("Relative Time (Seconds)").withYTitle("Number of Packets")
         elif key == "sentIP":
             builder = GraphBuilder(data=pcapData[key]).withTitle("IPs / Hostnames Traffic was Sent To").withXTitle("IPs / Hostnames").withYTitle("Number of Packets")
         elif key == "receivedIP":
             builder = GraphBuilder(data=pcapData[key]).withTitle("IPs / Hostnames Traffic was Received From").withXTitle("IPs / Hostnames").withYTitle("Number of Packets")
         elif key == "sentSize":
-            builder = GraphBuilder(data=pcapData[key]).withTitle("Average Size in Bytes of Packets Sent Over Time").withXTitle("Time").withYTitle("Packet Sizes (bytes)")
+            builder = GraphBuilder(data=pcapData[key]).withTitle("Average Size in Bytes of Packets Sent Over Time").withXTitle("Relative Time (Seconds)").withYTitle("Packet Sizes (bytes)")
         
         if builder:
             graphObjects.append(makeGraphObject(builder))

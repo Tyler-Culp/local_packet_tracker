@@ -15,23 +15,18 @@ MaxMind_client = geoip2.webservice.Client(MaxMind_account_id, MaxMind_license_ke
 # Does requests one by one but can be optimized to do them all at once
 # Ripe atlas documentation: https://ipmap.ripe.net/  https://ipmap.ripe.net/docs/02.api-reference/#locate 
 def geolocate_IP_RipeAtlas(ip):
-    print(f"ripe atlas ip {ip}")
+    print("Using RipeAtlas with hostname", ip)
     try:
         ip = socket.gethostbyname(ip)
-        print("Resolved IP")
-        res = requests.get(f"https://ipmap-api.ripe.net/v1/locate/{ip}")
-        print(f"response = {res}")
-        res = res.json()
-        print(f"json = {res}")
-        res = res.get("data")
-        print(f"data = {res}")
-        res = res.get(str(ip))
-        print(f"final result = {res}")
+        print("ip address =", ip)
+        res = requests.get(f"https://ipmap-api.ripe.net/v1/locate/{ip}/best")
+        js = res.json()
+        location = js.get("location")
         return {
-                "city": res.get("cityName"),
-                "country": res.get("countryName"),
-                "latitude": res.get("latitude"),
-                "longitude": res.get("longitude")
+                "city": location.get("cityName"),
+                "country": location.get("countryName"),
+                "latitude": location.get("latitude"),
+                "longitude": location.get("longitude")
             }
     except:
         return {"city": "Unknown", "country": "Unknown", "latitude": None, "longitude": None}
@@ -63,7 +58,7 @@ def geolocate_IP_MaxMind(ip):
         except geoip2.errors.AddressNotFoundError:
             return {"city": "Unknown", "country": "Unknown", "latitude": None, "longitude": None}
 
-def getSentIpLocations(map_data):
+def getSentIpLocations(map_data, api):
     # Geolocate sent IPs
     seen_ips = set()
     location_counts = {}
@@ -72,7 +67,14 @@ def getSentIpLocations(map_data):
         # Get 1000 requests a day so this lets you run program 50 times at minimum
         if len(seen_ips) > 20: break 
         seen_ips.add(ip)
-        location = geolocate_IP_RipeAtlas(ip)
+        location = None
+        if api == "MaxMind":
+            location = geolocate_IP_MaxMind(ip)
+        elif api == "RipeAtlas":
+            location = geolocate_IP_RipeAtlas(ip)
+        else:
+            print("Error, unknown api given")
+            break
         if location["latitude"] and location["longitude"]:
             loc_key = (location["latitude"], location["longitude"])
             if loc_key in location_counts:

@@ -33,6 +33,16 @@
             <form action="" method="post" onsubmit="formSubmitHandler(event)">
                 <label for="ip">IP or MAC Address of Interest:</label>
                 <input type="text" id="ip" name="ip"><br><br>
+                <p>Please select which Geolocation API you would like to use:</p>
+                <br>
+                <div class="radioButtonHolder">
+                    <label for="MaxMind">MaxMind:</label>
+                    <input type="radio" id="MaxMind" name="api" value="MaxMind">
+                    <br><br>
+                    <label for="RipeAtlas">RipeAtlas:</label>
+                    <input type="radio" id="RipeAtlas" name="api" value="RipeAtlas">
+                </div>
+                <br>
                 <label for="pcapFile">PCAP File to Analyze:</label>
                 <input 
                     type="file" 

@@ -95,6 +95,10 @@ form input[type="file"] {
     border-radius: 0.25rem; 
 }
 
+.radioButtonHolder > label {
+    display: inline;
+}
+
 form input[type="submit"] {
     background-color: #4CAF50; /* Adjusted to match the theme */
     color: #fff;
