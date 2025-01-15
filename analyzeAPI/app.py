@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import base64
 import scapy.all as sc
-import magic
 from analyzeIPs import getPcapData
 from validator import isValidIPAddr, isValidMacAddr, normalizeMacAddr, macAddrToIPAddr, validate_magic_number, validate_mime_type
 from createGraph import GraphBuilder, makeGraphObject
@@ -116,7 +115,7 @@ def analyze_pcap():
         if builder:
             graphObjects.append(makeGraphObject(builder))
 
-    # Create the response
+    response = None
     if mapError is None:
         response = jsonify({
             "graphObjects": graphObjects,

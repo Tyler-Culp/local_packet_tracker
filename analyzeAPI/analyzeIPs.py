@@ -44,7 +44,7 @@ def processPacket(packet, pcapData: dict, IP: str, port: int, startTime: datetim
             pcapData["sentIP"][destIP] += 1
             pcapData["sentSize"][relativeTimeSeconds] += len(packet.payload)
 
-    if receivingPacketChecker.isPacketValid():
+    elif receivingPacketChecker.isPacketValid():
         currTime = datetime.fromtimestamp(float(packet.time))
         relativeTime = currTime - startTime
         relativeTimeSeconds = relativeTime.seconds
