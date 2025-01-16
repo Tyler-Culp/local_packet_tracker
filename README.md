@@ -1,6 +1,11 @@
 # Goal
 The goal of this project is to give people the ability to look deeper in pcaps and explore the captured traffic. Our tool gives people the ability to upload a pcap and an ip of interest and view metrics like the amount of traffic sent by the device and where it was sent to.
 
+## Running the application
+To run the application you first need to start the "back end" which is a Python Flask server. This can be done fairly quick and easy using the docker contianer, or you can try running it on your native hardware. There are instructions for both below, we recommend using Docker though.
+
+After that is done you just need to open index.html in your browser. You can do this by opening it as a file in your browser (i.e. typing `file://<path/to/index.html>`) or you can use something like VS Code's live server option to open it (done by right clicking on index.html in VS Code and selecting 'open with live server')
+
 ## General Notes
 When using the project you have the choice between using the MaxMind or RipeAtlas api for geolocation. In general we found RipeAtlas to not give quite as many results as MaxMind (i.e. MaxMind will give some locations where RipeAtlas gives nothing). This is offset by the fact that the MaxMind api requires a license key however, and limits users to 1000 requests per day at the free tier
 
