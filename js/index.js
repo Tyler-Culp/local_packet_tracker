@@ -40,6 +40,7 @@ async function formSubmitHandler(event) {
     document.querySelector("#graphArea").innerHTML = "";
     document.querySelector(".imageContainer").innerHTML = "";// Clear previous image
     document.querySelector(".mapContainer").innerHTML = ""; // Clear previous map
+    document.querySelector(".statsContainer").style.display = "none"; // Hide previous stats
 
     // File validation logic
     const fileInput = document.getElementById("pcapFile");
@@ -71,6 +72,11 @@ async function formSubmitHandler(event) {
             }
 
             else {
+                // Display statistics
+                if (data.statistics) {
+                    displayStatistics(data.statistics);
+                }
+
                 // Display the map
                 if (data.map) {
                     displayMap(data.map);
@@ -472,3 +478,14 @@ function displaySleekGraph(images) {
 
     // -----------------------------------------------------------------------------------------
 }
+
+function displayStatistics(stats) {
+    // Update the statistics values
+    document.getElementById("totalPackets").textContent = stats.totalPackets.toLocaleString();
+    document.getElementById("packetsSent").textContent = stats.totalPacketsSent.toLocaleString();
+    document.getElementById("packetsReceived").textContent = stats.totalPacketsReceived.toLocaleString();
+    
+    // Show the statistics container
+    document.querySelector(".statsContainer").style.display = "block";
+}
+

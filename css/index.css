@@ -356,3 +356,79 @@ body.dialog-open {
     position: absolute;
     right: 0;
 }
+
+/* Statistics Container Styling */
+.statsContainer {
+    width: 80%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 255, 200, 0.5);
+}
+
+.statsContainer h2 {
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba(0, 255, 200, 0.7);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.statCard {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    border: 2px solid #00ffc8;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 255, 200, 0.3);
+}
+
+.statCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 255, 200, 0.6);
+}
+
+.statValue {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #00ffc8;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 15px rgba(0, 255, 200, 0.8);
+}
+
+.statLabel {
+    font-size: 1rem;
+    color: #cccccc;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive adjustments for stats */
+@media (max-width: 768px) {
+    .statsContainer {
+        width: 90%;
+        padding: 1.5rem;
+    }
+    
+    .statsGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .statValue {
+        font-size: 2rem;
+    }
+}
+

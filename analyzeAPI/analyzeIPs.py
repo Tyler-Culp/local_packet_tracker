@@ -5,6 +5,9 @@ from datetime import datetime
 import socket
 from concurrent.futures import ThreadPoolExecutor
 
+# Shared lock for thread-safe updates to pcapData
+data_lock = threading.Lock()
+
 class PacketChecker:
     def __init__(self, IP: str, port: int, packet: sc.Packet, direction: str):
         self.IP = IP
@@ -39,7 +42,7 @@ def processPacket(packet, pcapData: dict, IP: str, port: int, startTime: datetim
         except:
             destIP = destIP
 
-        with threading.Lock():  # Ensure thread-safety when updating shared data
+        with data_lock:  # Ensure thread-safety when updating shared data
             pcapData["sentTime"][relativeTimeSeconds] += 1
             pcapData["sentIP"][destIP] += 1
             pcapData["sentSize"][relativeTimeSeconds] += len(packet.payload)
@@ -55,7 +58,7 @@ def processPacket(packet, pcapData: dict, IP: str, port: int, startTime: datetim
         except:
             srcIP = srcIP
 
-        with threading.Lock():  # Ensure thread-safety when updating shared data
+        with data_lock:  # Ensure thread-safety when updating shared data
             pcapData["receivedTime"][relativeTimeSeconds] += 1
             pcapData["receivedIP"][srcIP] += 1
 

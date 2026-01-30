@@ -115,16 +115,28 @@ def analyze_pcap():
         if builder:
             graphObjects.append(makeGraphObject(builder))
 
+    # Calculate statistics
+    totalPacketsSent = sum(pcapData["sentTime"].values())
+    totalPacketsReceived = sum(pcapData["receivedTime"].values())
+    
+    statistics = {
+        "totalPacketsSent": totalPacketsSent,
+        "totalPacketsReceived": totalPacketsReceived,
+        "totalPackets": totalPacketsSent + totalPacketsReceived
+    }
+
     response = None
     if mapError is None:
         response = jsonify({
             "graphObjects": graphObjects,
             "map": encodedGeographicMaps,
+            "statistics": statistics,
         })
     else:
         response = jsonify({
             "graphObjects": graphObjects,
             "mapError": mapError,
+            "statistics": statistics,
         })
     
     # Set CORS headers
